@@ -1,0 +1,59 @@
+/* ...existing code... */
+
+/* Connection status indicator styles */
+.status-indicator {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-indicator.disconnected {
+  background-color: rgba(220, 53, 69, 0.2);
+  color: #dc3545;
+}
+
+.status-indicator.connected {
+  background-color: rgba(25, 135, 84, 0.2);
+  color: #198754;
+}
+
+/* Navbar styling */
+.navbar {
+  background-color: #2c3e50; /* Dark blue-gray background */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 15px 0;
+}
+
+.navbar-brand {
+  color: #ecf0f1; /* Light text color */
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+
+.navbar-brand:hover {
+  color: #3498db; /* Light blue on hover */
+}
+
+.btn-connect {
+  background-color: #3498db; /* Blue button */
+  color: white;
+  border: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-connect:hover, .btn-connect:focus {
+  background-color: #2980b9; /* Darker blue on hover */
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-connect:disabled {
+  background-color: #27ae60; /* Green when connected */
+  opacity: 0.9;
+}
+
+/* ...existing code... */

@@ -3,127 +3,333 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MyToken Interface</title>
+    <title>Tuan Duong DeFi Platform</title>
+    <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      #loading-overlay {
+        display: none; /* Hide by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #loading-overlay.active {
+        display: flex; /* Only show when active class is added */
+      }
+
+      /* Connection status indicator styles */
+      .status-indicator {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .status-indicator.disconnected {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+      }
+
+      .status-indicator.connected {
+        background-color: rgba(25, 135, 84, 0.2);
+        color: #198754;
+      }
+    </style>
   </head>
   <body>
-    <div class="container mt-4">
-      <h1>MyToken Interface</h1>
-
-      <!-- Wallet Connection Section -->
-      <div id="wallet-info" class="mb-3">
-        <button id="connect-wallet" class="btn btn-primary">
-          Connect Wallet
-        </button>
-        <p>Connected Wallet: <span id="user-address">Not connected</span></p>
-        <p>Balance: <span id="user-balance">0</span> Duong</p>
-      </div>
-
-      <!-- Transfer Section -->
-      <div class="card mb-3">
-        <div class="card-body">
-          <h2 class="card-title">Transfer Tokens</h2>
-          <form id="transfer-form">
-            <div class="mb-3">
-              <label for="recipient" class="form-label"
-                >Recipient Address:</label
-              >
-              <input type="text" id="recipient" class="form-control" required />
-            </div>
-            <div class="mb-3">
-              <label for="amount" class="form-label">Amount:</label>
-              <input
-                type="number"
-                id="amount"
-                class="form-control"
-                step="0.000000000000000001"
-                required
-              />
-            </div>
-            <p>Transfer Fee: <span id="transfer-fee">0</span>%</p>
-            <p>Fee Amount: <span id="fee-amount">0</span> Duong</p>
-            <p>Recipient Will Receive: <span id="net-amount">0</span> Duong</p>
-            <button type="submit" class="btn btn-primary">Transfer</button>
-          </form>
-        </div>
-      </div>
-
-      <!-- Owner Controls Section -->
-      <div class="card mb-3" id="owner-controls" style="display: none">
-        <div class="card-body">
-          <h2 class="card-title">Owner Controls</h2>
-          <div
-            id="not-owner-message"
-            class="alert alert-info"
-            style="display: block"
-          >
-            Note: Only the contract owner can change the transfer fee.
-          </div>
-          <form id="set-fee-form" class="mb-3" style="display: none">
-            <div class="mb-3">
-              <label for="new-fee" class="form-label">New Transfer Fee:</label>
-              <input
-                type="number"
-                id="new-fee"
-                class="form-control"
-                max="100"
-                required
-              />
-            </div>
-            <button type="submit" class="btn btn-primary">
-              Set Transfer Fee
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <!-- Staking Section -->
-      <div class="card mb-3">
-        <div class="card-body">
-          <h2 class="card-title">Staking</h2>
-          <p>Your Staked Amount: <span id="staked-amount">0</span> Duong</p>
-          <p>Pending Rewards: <span id="pending-rewards">0</span> Duong</p>
-          <p>Total Staked: <span id="total-staked">0</span> Duong</p>
-          <p>Reward Rate: <span id="reward-rate">0</span>% per 10 seconds</p>
-          <form id="stake-form" class="mb-3">
-            <div class="mb-3">
-              <label for="stake-amount" class="form-label"
-                >Amount to Stake:</label
-              >
-              <input
-                type="number"
-                id="stake-amount"
-                class="form-control"
-                step="0.000000000000000001"
-                required
-              />
-            </div>
-            <button type="submit" class="btn btn-primary">Stake</button>
-          </form>
-          <form id="unstake-form" class="mb-3">
-            <div class="mb-3">
-              <label for="unstake-amount" class="form-label"
-                >Amount to Unstake:</label
-              >
-              <input
-                type="number"
-                id="unstake-amount"
-                class="form-control"
-                step="0.000000000000000001"
-                required
-              />
-            </div>
-            <button type="submit" class="btn btn-primary">Unstake</button>
-          </form>
-          <button id="claim-rewards" class="btn btn-primary">
-            Claim Rewards
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <i class="fas fa-coins me-2"></i>Tuan Duong DeFi
+        </a>
+        <div class="ms-auto" id="wallet-connect-container">
+          <button id="connect-wallet" class="btn btn-connect">
+            <i class="fas fa-wallet me-2"></i>Connect Wallet
           </button>
         </div>
       </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-4">
+      <!-- User Info Card -->
+      <div class="card main-card mb-4 wallet-card">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h4><i class="fas fa-user-circle me-2"></i>Account</h4>
+              <div class="wallet-info mt-3">
+                <p>
+                  <span class="label">Address:</span>
+                  <span id="user-address" class="value">Not connected</span>
+                </p>
+                <p>
+                  <span class="label">Balance:</span>
+                  <span id="user-balance" class="value highlight">0</span>
+                  <span class="token-symbol">DNG</span>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+              <div id="connection-status" class="status-indicator disconnected">
+                <i class="fas fa-circle me-2"></i>Disconnected
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-7">
+          <!-- Transfer Card -->
+          <div class="card main-card mb-4">
+            <div class="card-header">
+              <h5><i class="fas fa-paper-plane me-2"></i>Transfer Tokens</h5>
+            </div>
+            <div class="card-body">
+              <form id="transfer-form">
+                <div class="mb-3">
+                  <label for="recipient" class="form-label"
+                    >Recipient Address</label
+                  >
+                  <div class="input-group">
+                    <span class="input-group-text"
+                      ><i class="fas fa-user"></i
+                    ></span>
+                    <input
+                      type="text"
+                      id="recipient"
+                      class="form-control"
+                      placeholder="0x..."
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="amount" class="form-label">Amount</label>
+                  <div class="input-group">
+                    <span class="input-group-text"
+                      ><i class="fas fa-coins"></i
+                    ></span>
+                    <input
+                      type="number"
+                      id="amount"
+                      class="form-control"
+                      step="0.000000000000000001"
+                      placeholder="0.0"
+                      required
+                    />
+                    <span class="input-group-text">DNG</span>
+                  </div>
+                </div>
+
+                <div class="transaction-details">
+                  <div class="transaction-detail-item">
+                    <span class="detail-label">Transfer Fee:</span>
+                    <span class="detail-value"
+                      ><span id="transfer-fee">0</span>%</span
+                    >
+                  </div>
+                  <div class="transaction-detail-item">
+                    <span class="detail-label">Fee Amount:</span>
+                    <span class="detail-value"
+                      ><span id="fee-amount">0</span>DNG</span
+                    >
+                  </div>
+                  <div class="transaction-detail-item highlight">
+                    <span class="detail-label">Recipient Will Receive:</span>
+                    <span class="detail-value"
+                      ><span id="net-amount">0</span>DNG</span
+                    >
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-3">
+                  <i class="fas fa-paper-plane me-2"></i>Send Tokens
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Owner Controls Card -->
+          <div class="card main-card mb-4" id="owner-controls">
+            <div class="card-header">
+              <h5><i class="fas fa-user-shield me-2"></i>Owner Controls</h5>
+            </div>
+            <div class="card-body">
+              <div id="not-owner-message" class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>Only the contract owner
+                can change the transfer fee.
+              </div>
+              <form id="set-fee-form" style="display: none">
+                <div class="mb-3">
+                  <label for="new-fee" class="form-label"
+                    >New Transfer Fee (%)</label
+                  >
+                  <div class="input-group">
+                    <span class="input-group-text"
+                      ><i class="fas fa-percentage"></i
+                    ></span>
+                    <input
+                      type="number"
+                      id="new-fee"
+                      class="form-control"
+                      max="1"
+                      step="0.01"
+                      placeholder="0.1"
+                      required
+                    />
+                  </div>
+                  <small class="form-text text-muted"
+                    >Maximum allowed fee is 1%</small
+                  >
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                  <i class="fas fa-save me-2"></i>Update Fee
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-5">
+          <!-- Staking Card -->
+          <div class="card main-card mb-4">
+            <div class="card-header">
+              <h5><i class="fas fa-lock me-2"></i>Staking</h5>
+            </div>
+            <div class="card-body">
+              <!-- Staking Stats -->
+              <div class="staking-stats mb-4">
+                <div class="stat-item">
+                  <div class="stat-label">Your Staked Amount</div>
+                  <div class="stat-value">
+                    <span id="staked-amount">0</span>
+                    <span class="token-symbol">DNG</span>
+                  </div>
+                </div>
+                <div class="stat-item highlight">
+                  <div class="stat-label">Pending Rewards</div>
+                  <div class="stat-value">
+                    <span id="pending-rewards">0</span>
+                    <span class="token-symbol">DNG</span>
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-label">Total Network Stake</div>
+                  <div class="stat-value">
+                    <span id="total-staked">0</span>
+                    <span class="token-symbol">DNG</span>
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-label">Reward Rate</div>
+                  <div class="stat-value">
+                    <span id="reward-rate">0</span>% per 10 seconds
+                  </div>
+                </div>
+              </div>
+
+              <!-- Staking Actions -->
+              <div class="staking-actions">
+                <div class="action-group mb-3">
+                  <h6 class="action-title">Stake Tokens</h6>
+                  <form id="stake-form">
+                    <div class="input-group mb-2">
+                      <span class="input-group-text"
+                        ><i class="fas fa-plus-circle"></i
+                      ></span>
+                      <input
+                        type="number"
+                        id="stake-amount"
+                        class="form-control"
+                        placeholder="Amount to stake"
+                        step="0.000000000000000001"
+                        required
+                      />
+                      <span class="input-group-text">DNG</span>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">
+                      <i class="fas fa-lock me-2"></i>Stake
+                    </button>
+                  </form>
+                </div>
+
+                <div class="action-group mb-3">
+                  <h6 class="action-title">Unstake Tokens</h6>
+                  <form id="unstake-form">
+                    <div class="input-group mb-2">
+                      <span class="input-group-text"
+                        ><i class="fas fa-unlock"></i
+                      ></span>
+                      <input
+                        type="number"
+                        id="unstake-amount"
+                        class="form-control"
+                        placeholder="Amount to unstake"
+                        step="0.000000000000000001"
+                        required
+                      />
+                      <span class="input-group-text">DNG</span>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100">
+                      <i class="fas fa-unlock me-2"></i>Unstake
+                    </button>
+                  </form>
+                </div>
+
+                <button id="claim-rewards" class="btn btn-primary w-100">
+                  <i class="fas fa-gift me-2"></i>Claim Rewards
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-4 py-3">
+      <div class="container text-center">
+        <p>
+          © 2023 MyToken DeFi Platform |
+          <a href="#" class="footer-link">Documentation</a> |
+          <a href="#" class="footer-link">GitHub</a>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+      <div class="spinner-container">
+        <div class="spinner-border" role="status"></div>
+        <p class="mt-2">Processing Transaction...</p>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
 
     <script
       type="text/javascript"
@@ -131,6 +337,7 @@
       crossorigin="anonymous"
       src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.8.0/ethers.umd.min.js"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

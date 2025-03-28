@@ -31,6 +31,19 @@ document
       contract = new ethers.Contract(contractAddress, abi, signer);
 
       document.getElementById("user-address").textContent = userAddress;
+
+      // Update connection status UI
+      const connectionStatus = document.getElementById("connection-status");
+      connectionStatus.classList.remove("disconnected");
+      connectionStatus.classList.add("connected");
+      connectionStatus.innerHTML =
+        '<i class="fas fa-circle me-2"></i>Connected';
+
+      // Update button text
+      document.getElementById("connect-wallet").innerHTML =
+        '<i class="fas fa-wallet me-2"></i>Wallet Connected';
+      document.getElementById("connect-wallet").disabled = true;
+
       await updateUI();
     } else {
       alert("Please install MetaMask!");
@@ -97,12 +110,15 @@ document
     const weiAmount = ethers.utils.parseUnits(amount, 18);
 
     try {
+      showLoading();
       const tx = await contract.transfer(recipient, weiAmount);
       await tx.wait();
       alert("Transfer successful");
       await updateBalance();
     } catch (error) {
       alert("Transfer failed: " + error.message);
+    } finally {
+      hideLoading();
     }
   });
 
@@ -131,12 +147,15 @@ document
     e.preventDefault();
     const newFee = document.getElementById("new-fee").value;
     try {
+      showLoading();
       const tx = await contract.setTransferFee(newFee);
       await tx.wait();
       alert("Transfer fee updated");
       await updateTransferFee();
     } catch (error) {
       alert("Failed to set transfer fee: " + error.message);
+    } finally {
+      hideLoading();
     }
   });
 
@@ -147,6 +166,7 @@ document.getElementById("stake-form").addEventListener("submit", async (e) => {
   const weiAmount = ethers.utils.parseUnits(amount, 18);
 
   try {
+    showLoading();
     const tx = await contract.stake(weiAmount);
     await tx.wait();
     alert("Stake successful");
@@ -154,6 +174,8 @@ document.getElementById("stake-form").addEventListener("submit", async (e) => {
     await updateStakingInfo();
   } catch (error) {
     alert("Stake failed: " + error.message);
+  } finally {
+    hideLoading();
   }
 });
 
@@ -166,6 +188,7 @@ document
     const weiAmount = ethers.utils.parseUnits(amount, 18);
 
     try {
+      showLoading();
       const tx = await contract.unstake(weiAmount);
       await tx.wait();
       alert("Unstake successful");
@@ -173,12 +196,15 @@ document
       await updateStakingInfo();
     } catch (error) {
       alert("Unstake failed: " + error.message);
+    } finally {
+      hideLoading();
     }
   });
 
 // Handle claim rewards
 document.getElementById("claim-rewards").addEventListener("click", async () => {
   try {
+    showLoading();
     const tx = await contract.claimRewards();
     await tx.wait();
     alert("Rewards claimed successfully");
@@ -186,5 +212,24 @@ document.getElementById("claim-rewards").addEventListener("click", async () => {
     await updateStakingInfo();
   } catch (error) {
     alert("Claim rewards failed: " + error.message);
+  } finally {
+    hideLoading();
   }
+});
+
+// Add these functions to control the loading overlay
+function showLoading() {
+  document.getElementById("loading-overlay").classList.add("active");
+}
+
+function hideLoading() {
+  document.getElementById("loading-overlay").classList.remove("active");
+}
+
+// Initialize the app
+document.addEventListener("DOMContentLoaded", function () {
+  // Make sure loading is hidden on page load (this is now redundant due to CSS change, but good to be safe)
+  hideLoading();
+
+  // Your other initialization code
 });
