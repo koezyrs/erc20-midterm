@@ -10,7 +10,7 @@ contract MyToken is ERC20 {
     // Staking variables
     uint256 public totalStaked;
     uint256 public rewardRate = 100; // 10% annual reward (100/1000)
-    uint256 constant SECONDS_PER_YEAR = 31536000; // 365 days in seconds
+    uint256 constant SECONDS_PER_REWAWRD = 10; // 10 seconds
 
     // Staking structures
     struct Stake {
@@ -100,7 +100,7 @@ contract MyToken is ERC20 {
 
         uint256 stakingDuration = block.timestamp - userStake.lastClaimed;
         uint256 reward = (userStake.amount * rewardRate * stakingDuration) /
-            (SECONDS_PER_YEAR * 1000);
+            (SECONDS_PER_REWAWRD * 1000);
         return reward + rewards[staker];
     }
 
