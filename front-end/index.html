@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyToken Interface</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h1>MyToken Interface</h1>
+
+      <!-- Wallet Connection Section -->
+      <div id="wallet-info" class="mb-3">
+        <button id="connect-wallet" class="btn btn-primary">
+          Connect Wallet
+        </button>
+        <p>Connected Wallet: <span id="user-address">Not connected</span></p>
+        <p>Balance: <span id="user-balance">0</span> Duong</p>
+      </div>
+
+      <!-- Transfer Section -->
+      <div class="card mb-3">
+        <div class="card-body">
+          <h2 class="card-title">Transfer Tokens</h2>
+          <form id="transfer-form">
+            <div class="mb-3">
+              <label for="recipient" class="form-label"
+                >Recipient Address:</label
+              >
+              <input type="text" id="recipient" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label for="amount" class="form-label">Amount:</label>
+              <input
+                type="number"
+                id="amount"
+                class="form-control"
+                step="0.000000000000000001"
+                required
+              />
+            </div>
+            <p>Transfer Fee: <span id="transfer-fee">0</span>%</p>
+            <p>Fee Amount: <span id="fee-amount">0</span> Duong</p>
+            <p>Recipient Will Receive: <span id="net-amount">0</span> Duong</p>
+            <button type="submit" class="btn btn-primary">Transfer</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Owner Controls Section -->
+      <div class="card mb-3" id="owner-controls" style="display: none">
+        <div class="card-body">
+          <h2 class="card-title">Owner Controls</h2>
+          <div
+            id="not-owner-message"
+            class="alert alert-info"
+            style="display: block"
+          >
+            Note: Only the contract owner can change the transfer fee.
+          </div>
+          <form id="set-fee-form" class="mb-3" style="display: none">
+            <div class="mb-3">
+              <label for="new-fee" class="form-label"
+                >New Transfer Fee (max 100 for 1%):</label
+              >
+              <input
+                type="number"
+                id="new-fee"
+                class="form-control"
+                max="100"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Set Transfer Fee
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Staking Section -->
+      <div class="card mb-3">
+        <div class="card-body">
+          <h2 class="card-title">Staking</h2>
+          <p>Your Staked Amount: <span id="staked-amount">0</span> Duong</p>
+          <p>Pending Rewards: <span id="pending-rewards">0</span> Duong</p>
+          <p>Total Staked: <span id="total-staked">0</span> Duong</p>
+          <p>Reward Rate: <span id="reward-rate">0</span>% per year</p>
+          <form id="stake-form" class="mb-3">
+            <div class="mb-3">
+              <label for="stake-amount" class="form-label"
+                >Amount to Stake:</label
+              >
+              <input
+                type="number"
+                id="stake-amount"
+                class="form-control"
+                step="0.000000000000000001"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Stake</button>
+          </form>
+          <form id="unstake-form" class="mb-3">
+            <div class="mb-3">
+              <label for="unstake-amount" class="form-label"
+                >Amount to Unstake:</label
+              >
+              <input
+                type="number"
+                id="unstake-amount"
+                class="form-control"
+                step="0.000000000000000001"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Unstake</button>
+          </form>
+          <button id="claim-rewards" class="btn btn-primary">
+            Claim Rewards
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script
+      type="text/javascript"
+      integrity="sha384-KpyAXoFibPIUEi79EsnN1EtEWCCrOQ8MtGsa4IrVxeZo514PYarFXujnjyu0DzgC"
+      crossorigin="anonymous"
+      src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.8.0/ethers.umd.min.js"
+    ></script>
+    <script src="app.js"></script>
+  </body>
+</html>
