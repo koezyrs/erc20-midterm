@@ -85,6 +85,10 @@ Use the Hardhat console to interact with the deployed contract:
 npx hardhat console --network localhost
 ```
 
+### 7. Interact with the Web
+
+Open app.js and replace the `contractAddress` with your contract address.
+
 ### DEMO
 
 ![img](https://i.imgur.com/tGjpZzE.png)
