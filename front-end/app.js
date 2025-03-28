@@ -68,7 +68,8 @@ async function updateBalance() {
 // Update transfer fee and related displays
 async function updateTransferFee() {
   const transferFee = await contract.getTransferFee();
-  const feePercentage = (transferFee / 100).toFixed(2);
+  // Convert the BigNumber to a regular number and then format it
+  const feePercentage = (transferFee.toNumber() / 100).toFixed(2);
   document.getElementById("transfer-fee").textContent = feePercentage;
 }
 
@@ -145,10 +146,16 @@ document
   .getElementById("set-fee-form")
   .addEventListener("submit", async (e) => {
     e.preventDefault();
-    const newFee = document.getElementById("new-fee").value;
+    const newFeePercentage = parseFloat(
+      document.getElementById("new-fee").value
+    );
+
+    // Convert percentage to basis points (e.g., 0.1% -> 10 basis points)
+    const newFeeBasisPoints = Math.round(newFeePercentage * 100);
+
     try {
       showLoading();
-      const tx = await contract.setTransferFee(newFee);
+      const tx = await contract.setTransferFee(newFeeBasisPoints);
       await tx.wait();
       alert("Transfer fee updated");
       await updateTransferFee();
