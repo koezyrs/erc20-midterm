@@ -93,7 +93,7 @@ After that, run index.html with LiveServer.
 
 ### DEMO
 
-![img](https://i.imgur.com/tGjpZzE.png)
+![img](https://i.imgur.com/qWsp06q.png)
 
 ## Contributing
 
