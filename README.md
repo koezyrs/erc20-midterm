@@ -6,6 +6,35 @@ Below is a README file designed to guide users on how to set up and run the "erc
 
 This repository contains the implementation of an ERC20 token as part of a midterm project. The token is written in Solidity and is designed to be deployed on the Ethereum blockchain.
 
+## Features
+
+### Custom ERC20 Token
+
+- Standard ERC20 functionality (transfer, balanceOf, etc.)
+- Custom transfer implementation with a small fee
+
+### Staking and Reward System
+
+- **Staking**: Users can lock up their tokens to earn rewards over time
+- **Unstaking**: Users can withdraw their staked tokens at any time
+- **Rewards**: Stakers earn additional tokens automatically based on their staked amount and time
+- **Reward Claiming**: Accumulated rewards can be claimed and received as newly minted tokens
+
+#### How Staking Works
+
+1. Users stake tokens by calling the `stake(amount)` function
+2. The staked tokens are transferred from the user's wallet to the contract
+3. Every 10 seconds, rewards accumulate based on the formula:
+   - `reward = (staked amount * reward rate * time) / (period * 1000)`
+   - With default settings, this gives approximately 10% reward over time
+4. Users can claim rewards at any time through the `claimRewards()` function
+5. Unstaking is possible with the `unstake(amount)` function, which returns tokens to the user's wallet
+
+#### Owner Controls
+
+- The contract owner can adjust the transfer fee (max 1%)
+- The reward rate can be modified by the owner (max 50%)
+
 ## Prerequisites
 
 To work with this project, ensure you have the following installed:
@@ -91,6 +120,37 @@ Open app.js and replace the `contractAddress` with your contract address.
 
 After that, run index.html with LiveServer.
 
+## Using the Staking Features
+
+### In the Web Interface
+
+1. **Connect your wallet**: Click the "Connect Wallet" button to connect MetaMask
+2. **View your balance**: Check your token balance in the dashboard
+3. **Stake tokens**: Enter an amount and click "Stake" to start earning rewards
+4. **Monitor rewards**: Watch your pending rewards accumulate in real-time
+5. **Claim rewards**: Click "Claim Rewards" to receive your earned tokens
+6. **Unstake**: Withdraw your staked tokens by clicking "Unstake" and entering an amount
+
+### Using Contract Directly
+
+You can interact with the staking functions directly through the contract:
+
+```javascript
+// Stake tokens
+await contract.stake(ethers.utils.parseUnits("100", 18));
+
+// Check staking information
+const [amount, timestamp, pendingRewards] = await contract.getStakeInfo(
+  userAddress
+);
+
+// Claim rewards
+await contract.claimRewards();
+
+// Unstake tokens
+await contract.unstake(ethers.utils.parseUnits("50", 18));
+```
+
 ### DEMO
 
 ![img](https://i.imgur.com/qWsp06q.png)
@@ -107,4 +167,4 @@ This project is licensed under the [License Type]. See the `LICENSE` file in the
 
 ---
 
-This README provides a clear, step-by-step guide to set up and run the "erc20-midterm" project. It assumes a Hardhat-based workflow, which is typical for modern Ethereum development, but you should verify the repository’s structure and adjust the instructions accordingly if it uses a different framework or additional features (e.g., a frontend).
+This README provides a clear, step-by-step guide to set up and run the "erc20-midterm" project. It assumes a Hardhat-based workflow, which is typical for modern Ethereum development, but you should verify the repository's structure and adjust the instructions accordingly if it uses a different framework or additional features (e.g., a frontend).
