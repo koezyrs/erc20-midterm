@@ -89,6 +89,8 @@ npx hardhat console --network localhost
 
 Open app.js and replace the `contractAddress` with your contract address.
 
+After that, run index.html with LiveServer.
+
 ### DEMO
 
 ![img](https://i.imgur.com/tGjpZzE.png)

@@ -3,7 +3,7 @@ let signer;
 let contract;
 let userAddress;
 
-const contractAddress = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318"; // Replace with your deployed contract address
+const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // Replace with your deployed contract address
 const abi = [
   "function transfer(address recipient, uint256 amount) public returns (bool)",
   "function setTransferFee(uint fee) external",
